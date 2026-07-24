@@ -1,0 +1,342 @@
+/* ================================================
+   RecargaVE - Sistema de Diseño Global
+   Inspirado en Ding.com & MobileRecharge.com
+   ================================================ */
+
+/* -- Variables CSS -- */
+:root {
+  /* Colores primarios */
+  --primary-50: hsl(220, 100%, 97%);
+  --primary-100: hsl(220, 95%, 90%);
+  --primary-200: hsl(220, 91%, 80%);
+  --primary-300: hsl(220, 88%, 68%);
+  --primary-400: hsl(220, 85%, 57%);
+  --primary-500: hsl(220, 82%, 48%);
+  --primary-600: hsl(220, 80%, 40%);
+  --primary-700: hsl(220, 78%, 32%);
+  --primary-800: hsl(220, 75%, 24%);
+  --primary-900: hsl(220, 72%, 16%);
+
+  /* Colores de acento */
+  --accent-400: hsl(142, 76%, 42%);
+  --accent-500: hsl(142, 76%, 36%);
+  --accent-600: hsl(142, 76%, 28%);
+
+  /* Amarillo energético */
+  --energy-400: hsl(45, 100%, 55%);
+  --energy-500: hsl(45, 100%, 48%);
+
+  /* Gradientes */
+  --gradient-primary: linear-gradient(135deg, hsl(220, 82%, 48%) 0%, hsl(260, 80%, 52%) 100%);
+  --gradient-hero: linear-gradient(150deg, hsl(220, 90%, 12%) 0%, hsl(240, 85%, 18%) 40%, hsl(260, 80%, 20%) 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  --gradient-accent: linear-gradient(135deg, hsl(142, 80%, 42%) 0%, hsl(160, 75%, 38%) 100%);
+
+  /* Superficies oscuras */
+  --surface-900: hsl(220, 28%, 7%);
+  --surface-800: hsl(220, 26%, 10%);
+  --surface-700: hsl(220, 24%, 14%);
+  --surface-600: hsl(220, 22%, 18%);
+  --surface-500: hsl(220, 20%, 24%);
+  --surface-400: hsl(220, 18%, 32%);
+
+  /* Texto */
+  --text-primary: hsl(220, 20%, 96%);
+  --text-secondary: hsl(220, 15%, 72%);
+  --text-muted: hsl(220, 12%, 50%);
+
+  /* Bordes */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.22);
+
+  /* Sombras */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.25);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.3);
+  --shadow-glow: 0 0 30px rgba(66, 133, 244, 0.25);
+  --shadow-glow-green: 0 0 24px rgba(52, 168, 83, 0.3);
+
+  /* Transiciones */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Radio de bordes */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
+
+  /* Tipografía */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', 'Inter', sans-serif;
+}
+
+/* -- Reset Moderno -- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--surface-900);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* -- Tipografía -- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-sans);
+  border: none;
+  outline: none;
+}
+
+input, select, textarea {
+  font-family: var(--font-sans);
+  outline: none;
+}
+
+/* -- Layout Utilitarios -- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* -- Clases de animación -- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(66, 133, 244, 0.3); }
+  50%       { box-shadow: 0 0 40px rgba(66, 133, 244, 0.6); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.6s ease both; }
+.animate-fade-in    { animation: fadeIn 0.4s ease both; }
+
+/* -- Botones Globales -- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.12);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.btn:hover::after { opacity: 1; }
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+  backdrop-filter: blur(8px);
+}
+.btn-secondary:hover {
+  background: var(--surface-700);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.btn-accent {
+  background: var(--gradient-accent);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+.btn-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-green);
+}
+
+.btn-lg {
+  padding: 16px 36px;
+  font-size: 16px;
+}
+
+.btn-sm {
+  padding: 8px 18px;
+  font-size: 13px;
+}
+
+/* -- Tarjetas Glass -- */
+.card-glass {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all var(--transition-base);
+}
+
+.card-glass:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* -- Inputs Globales -- */
+.input-field {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--surface-700);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 15px;
+  transition: all var(--transition-fast);
+}
+
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+
+.input-field:focus {
+  border-color: var(--primary-400);
+  background: var(--surface-600);
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+}
+
+/* -- Badges -- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge-primary {
+  background: rgba(66, 133, 244, 0.15);
+  color: var(--primary-300);
+  border: 1px solid rgba(66, 133, 244, 0.25);
+}
+
+.badge-success {
+  background: rgba(52, 168, 83, 0.15);
+  color: hsl(142, 76%, 55%);
+  border: 1px solid rgba(52, 168, 83, 0.25);
+}
+
+/* -- Scrollbar personalizado -- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface-900); }
+::-webkit-scrollbar-thumb {
+  background: var(--surface-500);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--surface-400); }
+
+/* -- Utilidades -- */
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-green {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-title {
+  font-size: clamp(28px, 4vw, 42px);
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.section-subtitle {
+  font-size: 17px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* -- Utility Grid -- */
+.grid-auto { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }

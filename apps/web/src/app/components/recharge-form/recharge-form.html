@@ -1,0 +1,96 @@
+<div class="recharge-widget card-glass">
+  <div class="widget-header">
+    <h2 class="widget-title">Enviar Recarga</h2>
+    <p class="widget-sub">Rápido, seguro y confiable</p>
+  </div>
+
+  <!-- Step 1: Seleccionar Operadora -->
+  @if (step() === 1) {
+    <div class="step-section animate-fade-in">
+      <label class="step-label">1. Selecciona la operadora</label>
+      <div class="operators-grid">
+        @for (op of operators; track op.id) {
+          <button 
+            class="op-btn" 
+            [class.selected]="selectedOperator()?.id === op.id"
+            (click)="selectOperator(op)"
+            [style.--op-color]="op.color">
+            <span class="op-icon">{{ op.icon }}</span>
+            <span class="op-name">{{ op.name }}</span>
+            <div class="op-prefix">{{ op.prefix.join(', ') }}</div>
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Step 2: Número y Monto -->
+  @if (step() === 2) {
+    <div class="step-section animate-fade-in">
+      <button class="back-btn" (click)="goBack()">
+        ← {{ selectedOperator()?.name }}
+      </button>
+      
+      <label class="step-label">2. Número de teléfono</label>
+      <div class="phone-input-wrapper">
+        <div class="phone-prefix">+58</div>
+        <input 
+          type="tel" 
+          class="input-field phone-input"
+          placeholder="4XX XXX XXXX"
+          maxlength="10"
+          [value]="phoneNumber()"
+          (input)="onPhoneChange($any($event.target).value)" />
+      </div>
+
+      <label class="step-label" style="margin-top:20px">2b. Selecciona el monto</label>
+      <div class="amounts-grid">
+        @for (amount of amounts; track amount.value) {
+          <button 
+            class="amount-btn"
+            [class.selected]="selectedAmount() === amount.value"
+            (click)="selectAmount(amount.value)">
+            @if (amount.popular) {
+              <span class="popular-tag">Popular</span>
+            }
+            <span class="amount-value">{{ amount.label }}</span>
+            <span class="amount-usd">USD</span>
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Step 3: Confirmar -->
+  @if (step() === 3) {
+    <div class="step-section animate-fade-in">
+      <button class="back-btn" (click)="goBack()">← Cambiar monto</button>
+
+      <div class="summary-card">
+        <div class="summary-row">
+          <span>Operadora</span>
+          <strong>{{ selectedOperator()?.name }}</strong>
+        </div>
+        <div class="summary-row">
+          <span>Número</span>
+          <strong>+58 {{ phoneNumber() }}</strong>
+        </div>
+        <div class="summary-row">
+          <span>Monto</span>
+          <strong class="amount-highlighted">${{ selectedAmount() }} USD</strong>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg proceed-btn" [disabled]="!isFormValid()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Proceder al Pago
+      </button>
+
+      <p class="secure-note">
+        🔒 Transacción cifrada SSL/TLS
+      </p>
+    </div>
+  }
+</div>
