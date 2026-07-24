@@ -1,32 +1,25 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '../../../lib/dbConnect';
-import Deposito from '../../../models/Deposito';
-import { apiResponse, apiError } from '../../../lib/apiResponse';
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { apiSuccess, apiError } from '@/lib/apiResponse';
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    await dbConnect();
-    const body = await request.json();
-    const { id_vendedor, grupo } = body;
+    const body = await req.json();
+    const { id_vendedor, grupo } = body as { id_vendedor: number; grupo: string };
 
-    if (id_vendedor === undefined || !grupo) {
-      return apiError('Faltan parámetros requeridos (id_vendedor, grupo)', '01', 400);
+    if (!id_vendedor) {
+      return apiError('Faltan campos requeridos.', '01', 400);
     }
 
-    const depositos = await Deposito.find({
-      id_vendedor: Number(id_vendedor),
-      grupo,
-      estado: 'En Tránsito'
-    })
-      .sort({ createdAt: -1 })
-      .limit(10);
-
-    return apiResponse({
-      codigo: '00',
-      mensaje: 'Últimos depósitos en tránsito recuperados.',
-      depositos
+    const depositos = await prisma.deposito.findMany({
+      where: { id_vendedor, estado: 'En Tránsito' },
+      take: 10,
+      orderBy: { createdAt: 'desc' },
     });
-  } catch (error: any) {
-    return apiError(error.message || 'Error en el servidor.', '99', 500);
+
+    return apiSuccess({ depositos }, 'Depósitos en tránsito.');
+  } catch (error) {
+    console.error('[POST /api/depositos]', error);
+    return apiError('Error al obtener depósitos.');
   }
 }

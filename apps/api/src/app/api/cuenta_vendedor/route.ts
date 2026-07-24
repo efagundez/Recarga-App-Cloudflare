@@ -1,61 +1,53 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '../../../lib/dbConnect';
-import TransaccionCuenta from '../../../models/TransaccionCuenta';
-import { apiResponse, apiError } from '../../../lib/apiResponse';
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { apiSuccess, apiError } from '@/lib/apiResponse';
 
-async function getCuentaHistorial(params: { id_vendedor?: any; cuenta?: string; fecha?: string; grupo?: string }) {
-  const { id_vendedor, cuenta, fecha, grupo } = params;
-  const filter: any = {};
-
-  if (id_vendedor !== undefined && id_vendedor !== null && id_vendedor !== '') {
-    filter.id_vendedor = Number(id_vendedor);
-  }
-  if (grupo) {
-    filter.grupo = grupo;
-  }
-  if (cuenta) {
-    filter.cuenta = cuenta;
-  }
-  if (fecha) {
-    const start = new Date(fecha);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(fecha);
-    end.setHours(23, 59, 59, 999);
-    filter.fecha = { $gte: start, $lte: end };
-  }
-
-  const transacciones = await TransaccionCuenta.find(filter).sort({ fecha: -1 });
-
-  return apiResponse({
-    codigo: '00',
-    mensaje: 'Historial de la cuenta recuperado exitosamente.',
-    transacciones
+async function getHistorial(id_vendedor: number, cuenta: string) {
+  return prisma.recharge.findMany({
+    where: {
+      id_vendedor,
+      cuenta: { contains: cuenta },
+    },
+    orderBy: { createdAt: 'desc' },
   });
 }
 
-export async function GET(request: Request) {
+export async function GET(req: NextRequest) {
   try {
-    await dbConnect();
-    const { searchParams } = new URL(request.url);
-    const id_vendedor = searchParams.get('id_vendedor');
-    const cuenta = searchParams.get('cuenta') || undefined;
-    const fecha = searchParams.get('fecha') || undefined;
-    const grupo = searchParams.get('grupo') || undefined;
+    const { searchParams } = new URL(req.url);
+    const id_vendedor = Number(searchParams.get('id_vendedor'));
+    const cuenta = searchParams.get('cuenta') ?? '';
 
-    return await getCuentaHistorial({ id_vendedor, cuenta, fecha, grupo });
-  } catch (error: any) {
-    return apiError(error.message || 'Error al obtener historial.', '99', 500);
+    if (!id_vendedor) {
+      return apiError('Faltan campos requeridos.', '01', 400);
+    }
+
+    const transacciones = await getHistorial(id_vendedor, cuenta);
+    return apiSuccess({ transacciones }, 'Historial de cuenta.');
+  } catch (error) {
+    console.error('[GET /api/cuenta_vendedor]', error);
+    return apiError('Error al obtener historial de cuenta.');
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    await dbConnect();
-    const body = await request.json();
-    const { id_vendedor, cuenta, fecha, grupo } = body;
+    const body = await req.json();
+    const { id_vendedor, cuenta = '', fecha, grupo } = body as {
+      id_vendedor: number;
+      cuenta: string;
+      fecha?: string;
+      grupo: string;
+    };
 
-    return await getCuentaHistorial({ id_vendedor, cuenta, fecha, grupo });
-  } catch (error: any) {
-    return apiError(error.message || 'Error al obtener historial.', '99', 500);
+    if (!id_vendedor) {
+      return apiError('Faltan campos requeridos.', '01', 400);
+    }
+
+    const transacciones = await getHistorial(id_vendedor, cuenta);
+    return apiSuccess({ transacciones }, 'Historial de cuenta.');
+  } catch (error) {
+    console.error('[POST /api/cuenta_vendedor]', error);
+    return apiError('Error al obtener historial de cuenta.');
   }
 }

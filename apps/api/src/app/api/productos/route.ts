@@ -1,19 +1,23 @@
-import { NextResponse } from 'next/server';
-import { apiResponse } from '@/lib/apiResponse';
-import { PRODUCTOS_CATALOGO } from '@/lib/productos';
+import prisma from '@/lib/prisma';
+import { apiSuccess, apiError } from '@/lib/apiResponse';
+
+async function getProductos() {
+  const productos = await prisma.producto.findMany({ where: { estado: 'ACTIVO' } });
+  return apiSuccess({ productos }, 'Productos disponibles.');
+}
 
 export async function GET() {
-  return NextResponse.json(
-    apiResponse('00', 'Lista de productos.', {
-      productos: PRODUCTOS_CATALOGO,
-    })
-  );
+  try {
+    return await getProductos();
+  } catch (error: any) {
+    return apiError(error.message || 'Error en el servidor', '99');
+  }
 }
 
 export async function POST() {
-  return NextResponse.json(
-    apiResponse('00', 'Lista de productos.', {
-      productos: PRODUCTOS_CATALOGO,
-    })
-  );
+  try {
+    return await getProductos();
+  } catch (error: any) {
+    return apiError(error.message || 'Error en el servidor', '99');
+  }
 }

@@ -1,34 +1,40 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '../../../lib/dbConnect';
-import Deposito from '../../../models/Deposito';
-import { apiResponse, apiError } from '../../../lib/apiResponse';
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { apiSuccess, apiError } from '@/lib/apiResponse';
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    await dbConnect();
-    const body = await request.json();
-    const { id_vendedor, fecha, id_banco, nro_deposito, monto, grupo } = body;
+    const body = await req.json();
+    const { id_vendedor, fecha, id_banco, nro_deposito, monto, grupo } = body as {
+      id_vendedor: number;
+      fecha: string;
+      id_banco: number;
+      nro_deposito: string;
+      monto: number;
+      grupo: string;
+    };
 
-    if (id_vendedor === undefined || !fecha || !id_banco || !nro_deposito || monto === undefined || !grupo) {
-      return apiError('Faltan datos obligatorios para registrar el depósito.', '01', 400);
+    if (!id_vendedor || !fecha || !id_banco || !nro_deposito || !monto) {
+      return apiError('Faltan campos requeridos.', '01', 400);
     }
 
-    const nuevoDeposito = await Deposito.create({
-      id_vendedor: Number(id_vendedor),
-      fecha,
-      id_banco,
-      nro_deposito,
-      monto: Number(monto),
-      grupo,
-      estado: 'En Tránsito'
+    const id_deposito = Date.now();
+
+    const deposito = await prisma.deposito.create({
+      data: {
+        id_deposito,
+        id_vendedor,
+        id_banco,
+        nro_deposito,
+        monto,
+        fecha,
+        estado: 'En Tránsito',
+      },
     });
 
-    return apiResponse({
-      codigo: '00',
-      mensaje: 'Depósito registrado exitosamente en estado En Tránsito.',
-      deposito: nuevoDeposito
-    });
-  } catch (error: any) {
-    return apiError(error.message || 'Error al registrar el depósito.', '99', 500);
+    return apiSuccess({ id_deposito: deposito.id_deposito }, 'Depósito registrado exitosamente.');
+  } catch (error) {
+    console.error('[POST /api/deposito]', error);
+    return apiError('Error al registrar el depósito.');
   }
 }

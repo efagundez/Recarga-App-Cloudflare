@@ -1,29 +1,24 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '../../../lib/dbConnect';
-import Mensaje from '../../../models/Mensaje';
-import { apiResponse, apiError } from '../../../lib/apiResponse';
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { apiSuccess, apiError } from '@/lib/apiResponse';
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    await dbConnect();
-    const body = await request.json();
-    const { id_vendedor, grupo } = body;
+    const body = await req.json();
+    const { id_vendedor, grupo } = body as { id_vendedor: number; grupo: string };
 
-    if (id_vendedor === undefined || !grupo) {
-      return apiError('Faltan parámetros requeridos (id_vendedor, grupo)', '01', 400);
+    if (!id_vendedor) {
+      return apiError('Faltan campos requeridos.', '01', 400);
     }
 
-    const mensajes = await Mensaje.find({
-      id_vendedor: Number(id_vendedor),
-      grupo
-    }).sort({ fecha: -1 });
-
-    return apiResponse({
-      codigo: '00',
-      mensaje: 'Lista de mensajes recuperada exitosamente.',
-      mensajes
+    const mensajes = await prisma.mensaje.findMany({
+      where: { id_vendedor },
+      orderBy: { createdAt: 'desc' },
     });
-  } catch (error: any) {
-    return apiError(error.message || 'Error en el servidor', '99', 500);
+
+    return apiSuccess({ mensajes }, 'Bandeja de mensajes.');
+  } catch (error) {
+    console.error('[POST /api/mensajes]', error);
+    return apiError('Error al obtener mensajes.');
   }
 }

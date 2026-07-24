@@ -10,6 +10,10 @@ const nextConfig = {
   // Use this to set Nx-specific options
   // See: https://nx.dev/recipes/next/next-config-setup
   nx: {},
+  // Required for Render / production deployments
+  output: 'standalone',
+  // Keep Prisma client out of the Next.js bundle (native binaries)
+  serverExternalPackages: ['@prisma/client', 'prisma'],
   async headers() {
     return [
       {

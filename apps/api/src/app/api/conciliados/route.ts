@@ -1,33 +1,21 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '../../../lib/dbConnect';
-import Deposito from '../../../models/Deposito';
-import { apiResponse, apiError } from '../../../lib/apiResponse';
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { apiSuccess, apiError } from '@/lib/apiResponse';
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    await dbConnect();
-    const body = await request.json();
-    const { grupo, id_vendedor } = body;
+    const body = await req.json();
+    const { grupo } = body as { grupo: string };
 
-    if (!grupo) {
-      return apiError('El parámetro grupo es requerido.', '01', 400);
-    }
-
-    const query: any = { grupo, estado: 'Conciliado' };
-    if (id_vendedor !== undefined) {
-      query.id_vendedor = Number(id_vendedor);
-    }
-
-    const conciliados = await Deposito.find(query)
-      .sort({ updatedAt: -1, createdAt: -1 })
-      .limit(10);
-
-    return apiResponse({
-      codigo: '00',
-      mensaje: 'Últimos depósitos conciliados recuperados.',
-      conciliados
+    const conciliados = await prisma.deposito.findMany({
+      where: { estado: 'Conciliado' },
+      take: 10,
+      orderBy: { createdAt: 'desc' },
     });
-  } catch (error: any) {
-    return apiError(error.message || 'Error en el servidor.', '99', 500);
+
+    return apiSuccess({ conciliados }, 'Depósitos conciliados.');
+  } catch (error) {
+    console.error('[POST /api/conciliados]', error);
+    return apiError('Error al obtener depósitos conciliados.');
   }
 }

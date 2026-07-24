@@ -1,9 +1,0 @@
-# Dockerfile.mongo
-# Usa la imagen oficial de MongoDB
-FROM mongo:latest
-
-# Exponer el puerto estándar
-EXPOSE 27017
-
-# Comando por defecto para iniciar mongod
-CMD ["mongod"]

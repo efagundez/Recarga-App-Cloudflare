@@ -1,44 +1,44 @@
-import { NextResponse } from 'next/server';
-import { apiResponse, apiError } from '@/lib/apiResponse';
-import { PRODUCTOS_CATALOGO } from '@/lib/productos';
+import prisma from '@/lib/prisma';
+import { apiSuccess, apiError } from '@/lib/apiResponse';
 
-function handleOperadoraSearch(id_producto?: string | null, grupo?: string | null) {
-  let filtered = PRODUCTOS_CATALOGO;
-
+async function handleOperadora(id_producto?: number | null) {
   if (id_producto) {
-    filtered = filtered.filter(
-      (p) =>
-        p.id_producto.toLowerCase() === id_producto.toLowerCase() ||
-        p.operadora.toLowerCase() === id_producto.toLowerCase()
-    );
+    const producto = await prisma.producto.findFirst({
+      where: { id_producto: Number(id_producto) },
+    });
+
+    if (!producto) {
+      return apiError('Producto u operadora no encontrada', '01');
+    }
+
+    return apiSuccess({ operadora: producto }, 'Límites de operadora.');
   }
 
-  if (filtered.length === 0) {
-    return NextResponse.json(apiError('Producto u operadora no encontrada', '01'));
-  }
-
-  return NextResponse.json(
-    apiResponse('00', 'Detalles de operadora / producto.', {
-      operadoras: filtered,
-    })
-  );
+  // Sin id_producto: retorna todos los activos
+  const productos = await prisma.producto.findMany({ where: { estado: 'ACTIVO' } });
+  return apiSuccess({ operadora: productos }, 'Límites de operadora.');
 }
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id_producto = searchParams.get('id_producto');
-  const grupo = searchParams.get('grupo');
+  try {
+    const { searchParams } = new URL(request.url);
+    const id_producto = searchParams.get('id_producto')
+      ? Number(searchParams.get('id_producto'))
+      : null;
 
-  return handleOperadoraSearch(id_producto, grupo);
+    return await handleOperadora(id_producto);
+  } catch (error: any) {
+    return apiError(error.message || 'Error en el servidor', '01');
+  }
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
-    const { id_producto, grupo } = body;
+    const { id_producto } = body;
 
-    return handleOperadoraSearch(id_producto, grupo);
+    return await handleOperadora(id_producto ? Number(id_producto) : null);
   } catch (error: any) {
-    return NextResponse.json(apiError(error.message || 'Error en el servidor', '01'));
+    return apiError(error.message || 'Error en el servidor', '01');
   }
 }
