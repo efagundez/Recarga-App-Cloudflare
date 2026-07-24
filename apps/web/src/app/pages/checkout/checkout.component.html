@@ -1,59 +1,67 @@
 <div class="checkout-container">
-  <h2>Confirmar Recarga</h2>
-
-  <form #checkoutForm="ngForm" (ngSubmit)="confirm()" class="checkout-form">
-    <!-- Phone number -->
-    <div class="form-group">
-      <label for="phoneNumber">Número de teléfono</label>
-      <input
-        type="tel"
-        id="phoneNumber"
-        name="phoneNumber"
-        placeholder="0412-1234567"
-        [(ngModel)]="rechargePayload.phoneNumber"
-        required
-      />
+  <div class="checkout-box">
+    
+    <div class="checkout-header">
+      <img src="https://visualrecarga.sytes.net/assets/images/logo.png" alt="Visual Recarga Logo" class="logo" onerror="this.src='/favicon.ico'" />
+      <h2>Introduzca los datos de la recarga</h2>
     </div>
 
-    <!-- Operator -->
-    <div class="form-group">
-      <label for="operator">Operadora</label>
-      <select
-        id="operator"
-        name="operator"
-        [(ngModel)]="rechargePayload.operator"
-        required
-      >
-        <option *ngFor="let op of operators" [value]="op">{{ op }}</option>
-      </select>
-    </div>
+    <form (ngSubmit)="confirm()" class="checkout-form">
+      
+      <div class="form-group">
+        <label for="producto">Producto:</label>
+        <select 
+          id="producto" 
+          name="producto" 
+          [(ngModel)]="rechargePayload.id_producto"
+          required
+          [disabled]="loading"
+        >
+          <option [value]="0">0 - Seleccione producto</option>
+          <option *ngFor="let prod of productos" [value]="prod.id_producto">
+            {{ prod.id_producto }} - {{ prod.nombre | uppercase }}
+          </option>
+        </select>
+      </div>
 
-    <!-- Amount -->
-    <div class="form-group">
-      <label for="amount">Monto (Bs.)</label>
-      <input
-        type="number"
-        id="amount"
-        name="amount"
-        min="1"
-        [(ngModel)]="rechargePayload.amount"
-        required
-      />
-    </div>
+      <div class="form-group">
+        <label for="cuenta">Nro. Teléfono o Tarjeta:</label>
+        <input 
+          type="text" 
+          id="cuenta" 
+          name="cuenta"
+          [(ngModel)]="rechargePayload.cuenta"
+          placeholder="04120000000"
+          required
+          [disabled]="loading"
+        >
+      </div>
 
-    <!-- Error message -->
-    <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+      <div class="form-group amount-group">
+        <label for="monto">Monto a Recargar:</label>
+        <input 
+          type="number" 
+          id="monto" 
+          name="monto"
+          [(ngModel)]="rechargePayload.monto"
+          placeholder="60"
+          required
+          [disabled]="loading"
+        >
+      </div>
 
-    <!-- Actions -->
-    <div class="actions">
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="!checkoutForm.valid || loading"
-      >
-        {{ loading ? 'Procesando…' : 'Confirmar Recarga' }}
-      </button>
-      <a routerLink="/recargar" class="btn btn-secondary">Volver</a>
-    </div>
-  </form>
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-verify" [disabled]="loading || rechargePayload.id_producto === 0">
+          <i class="icon-check"></i> Verificar
+        </button>
+        <button type="button" class="btn-clear" [disabled]="loading" (click)="rechargePayload.cuenta=''; rechargePayload.monto=0">
+          <i class="icon-refresh"></i> Limpiar
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

@@ -3,6 +3,7 @@ import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { ILoginRequest } from '@recarga/types';
 
 @Component({
   selector: 'app-login',
@@ -12,21 +13,16 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.scss']
 })
 export class LoginComponent {
-  // Servicios inyectados
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  email = signal('');
-  password = signal('');
+  grupo = signal('');
+  usuario = signal('');
+  contrasenia = signal('');
+  
   loading = signal(false);
   errorMessage = signal<string | null>(null);
   showPassword = signal(false);
-  mode = signal<'login' | 'register'>('login');
-
-  toggleMode() {
-    this.mode.update(m => m === 'login' ? 'register' : 'login');
-    this.errorMessage.set(null);
-  }
 
   togglePassword() {
     this.showPassword.update(v => !v);
@@ -36,35 +32,21 @@ export class LoginComponent {
     this.loading.set(true);
     this.errorMessage.set(null);
 
-    const payload = {
-      email: this.email(),
-      password: this.password()
+    const payload: ILoginRequest = {
+      grupo: this.grupo(),
+      usuario: this.usuario(),
+      contrasenia: this.contrasenia()
     };
 
-    if (this.mode() === 'login') {
-      this.authService.login(payload).subscribe({
-        next: () => {
-          this.loading.set(false);
-          this.router.navigate(['/']); // Redirigir a inicio (Home) tras loguear
-        },
-        error: (err) => {
-          this.loading.set(false);
-          this.errorMessage.set(err.message);
-        }
-      });
-    } else {
-      // Para el registro, generamos un nombre base de su email
-      const name = this.email().split('@')[0];
-      this.authService.register({ ...payload, name }).subscribe({
-        next: () => {
-          this.loading.set(false);
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          this.loading.set(false);
-          this.errorMessage.set(err.message);
-        }
-      });
-    }
+    this.authService.login(payload).subscribe({
+      next: () => {
+        this.loading.set(false);
+        this.router.navigate(['/']); // Redirigir a inicio (Home)
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.errorMessage.set(err.message);
+      }
+    });
   }
 }
