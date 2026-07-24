@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap, catchError, throwError } from 'rxjs';
 import { ILoginRequest, ILoginResponse } from '@recarga/types';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = environment.apiUrl;
 
   private authStatus = new BehaviorSubject<boolean>(this.hasToken());
 

@@ -1,0 +1,41 @@
+services:
+  # 1. Base de Datos Privada (MongoDB en Docker)
+  - type: pserv
+    name: mongodb-recarga
+    env: docker
+    # Render construirá la imagen desde un Dockerfile si no se especifica otra cosa.
+    # Dado que solo necesitamos mongo oficial, crearemos un pequeño Dockerfile 
+    # o podemos usar un "image" en render si lo soporta.
+    # A partir de la API de render, se requiere repoCode o image.
+    repo: https://github.com/efagundez/recarga-app
+    dockerfilePath: ./apps/api/Dockerfile.mongo
+    # Opcional para persistencia (requiere plan pago en Render)
+    # disk:
+    #   name: mongo-data
+    #   mountPath: /data/db
+    #   sizeGB: 1
+
+  # 2. API Backend (Next.js)
+  - type: web
+    name: api-recarga
+    env: node
+    plan: free
+    rootDir: .
+    buildCommand: npm install && npx nx build api
+    # Next.js standalone o regular start
+    startCommand: cd dist/apps/api && npm install next react react-dom && npx next start
+    envVars:
+      - key: MONGODB_URI
+        # Conexión interna dentro de la red de Render
+        value: mongodb://mongodb-recarga:27017/recarga_db
+      - key: JWT_SECRET
+        generateValue: true
+
+  # 3. Frontend Angular (Sitio Estático)
+  - type: web
+    name: web-recarga
+    env: static
+    plan: free
+    rootDir: .
+    buildCommand: npm install && npx nx build web --configuration production
+    staticPublishPath: ./dist/apps/web/browser

@@ -3,12 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { IVentaRequest, IVentaResponse, IProductosResponse, IUltimaTransaccionResponse } from '@recarga/types';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class RechargeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = environment.apiUrl;
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
