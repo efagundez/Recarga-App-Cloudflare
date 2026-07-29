@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "prisma:generate": "prisma generate --schema=prisma/schema.prisma",
-    "prebuild": "prisma generate --schema=prisma/schema.prisma"
+    "prebuild": "prisma generate --schema=prisma/schema.prisma",
+    "build:cf": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.0",
