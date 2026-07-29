@@ -1,0 +1,184 @@
+<!-- Hero Section (embebido) -->
+<app-hero></app-hero>
+
+<!-- Quick Recharge Widget CTA -->
+<section class="quick-recharge-section">
+  <div class="container">
+    <div class="qr-layout">
+      <div class="qr-info animate-fade-in-up">
+        <div class="badge badge-primary" style="margin-bottom:16px">🚀 Panel de Recarga Rápida</div>
+        <h2 class="section-title" style="margin-bottom:16px">
+          Recarga en 3 pasos<br/>
+          <span class="text-gradient">simples</span>
+        </h2>
+        <p class="section-subtitle" style="margin-bottom:32px">
+          Selecciona la operadora, ingresa el número y elige el monto. 
+          Tu familiar recibe la recarga al instante.
+        </p>
+
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div>
+              <strong>Elige la operadora</strong>
+              <p>Digitel, Movistar o Movilnet</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div>
+              <strong>Ingresa el número</strong>
+              <p>El número venezolano a recargar</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div>
+              <strong>Paga y listo</strong>
+              <p>Recarga entregada en menos de 30 segundos</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recharge Form Widget -->
+      <div class="qr-widget animate-fade-in-up" style="animation-delay:0.2s">
+        <app-recharge-form></app-recharge-form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="section-header animate-fade-in-up">
+      <div class="badge badge-primary" style="margin-bottom:12px">✨ ¿Por qué RecargaVE?</div>
+      <h2 class="section-title">
+        Todo lo que necesitas<br/><span class="text-gradient">en un solo lugar</span>
+      </h2>
+      <p class="section-subtitle" style="margin-top:12px">
+        Diseñado para la comunidad venezolana en el exterior.
+      </p>
+    </div>
+
+    <div class="features-grid animate-fade-in-up" style="animation-delay:0.2s">
+      @for (feature of features; track feature.title) {
+        <div class="feature-card card-glass" [style.--feature-color]="feature.color">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Operators Section -->
+<section class="operators-section">
+  <div class="container">
+    <h2 class="section-title" style="text-align:center;margin-bottom:48px">
+      Todas las operadoras <span class="text-gradient">venezolanas</span>
+    </h2>
+
+    <div class="operators-showcase">
+      <div class="op-showcase-card" style="--op-color:#E31837">
+        <div class="op-showcase-header">
+          <span class="op-logo">📱</span>
+          <div>
+            <h3>Digitel</h3>
+            <p>412 • 414</p>
+          </div>
+        </div>
+        <div class="op-features">
+          <span>✓ 4G LTE</span>
+          <span>✓ Cobertura Nacional</span>
+          <span>✓ Datos Móviles</span>
+        </div>
+        <a routerLink="/recargar" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:auto">Recargar</a>
+      </div>
+
+      <div class="op-showcase-card" style="--op-color:#019DF4">
+        <div class="op-showcase-header">
+          <span class="op-logo">📡</span>
+          <div>
+            <h3>Movistar</h3>
+            <p>416 • 426</p>
+          </div>
+        </div>
+        <div class="op-features">
+          <span>✓ 4G+</span>
+          <span>✓ Red Amplia</span>
+          <span>✓ Internet Rápido</span>
+        </div>
+        <a routerLink="/recargar" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:auto">Recargar</a>
+      </div>
+
+      <div class="op-showcase-card" style="--op-color:#00A651">
+        <div class="op-showcase-header">
+          <span class="op-logo">📶</span>
+          <div>
+            <h3>Movilnet</h3>
+            <p>418 • 428</p>
+          </div>
+        </div>
+        <div class="op-features">
+          <span>✓ 3G/4G</span>
+          <span>✓ Amplia Cobertura</span>
+          <span>✓ Confiable</span>
+        </div>
+        <a routerLink="/recargar" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:auto">Recargar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title" style="text-align:center;margin-bottom:48px">
+        Lo que dicen <span class="text-gradient">nuestros usuarios</span>
+      </h2>
+    </div>
+
+    <div class="testimonials-grid">
+      @for (t of testimonials; track t.name) {
+        <div class="testimonial-card card-glass">
+          <div class="testimonial-header">
+            <span class="t-avatar">{{ t.avatar }}</span>
+            <div>
+              <strong>{{ t.name }}</strong>
+              <p class="t-location">📍 {{ t.location }}</p>
+            </div>
+          </div>
+          <div class="t-stars">
+            @for (star of getStars(t.rating); track $index) {
+              <span>⭐</span>
+            }
+          </div>
+          <p class="t-text">"{{ t.text }}"</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CTA Banner -->
+<section class="cta-banner">
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="section-title" style="margin-bottom:16px">
+        ¿Listo para enviar tu primera<br/>
+        <span class="text-gradient">recarga hoy?</span>
+      </h2>
+      <p class="section-subtitle" style="margin-bottom:32px">
+        Únete a miles de venezolanos en el exterior que confían en RecargaVE.
+      </p>
+      <div class="cta-actions">
+        <a routerLink="/recargar" class="btn btn-primary btn-lg">⚡ Recargar Ahora</a>
+        <a routerLink="/lineas-virtuales" class="btn btn-secondary btn-lg">Ver Líneas Virtuales</a>
+      </div>
+    </div>
+  </div>
+</section>

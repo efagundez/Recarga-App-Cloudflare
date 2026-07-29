@@ -1,0 +1,46 @@
+<nav class="navbar" [class.scrolled]="isScrolled()">
+  <div class="container nav-inner">
+    <!-- Logo -->
+    <a routerLink="/" class="brand">
+      <div class="brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+        </svg>
+      </div>
+      <span class="brand-name">RecargaVE</span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <ul class="nav-links">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Inicio</a></li>
+      <li><a routerLink="/recargar">Recargar</a></li>
+      <li><a routerLink="/lineas-virtuales">Líneas Virtuales</a></li>
+      <li><a routerLink="/historial">Historial</a></li>
+    </ul>
+
+    <!-- CTA Buttons -->
+    <div class="nav-cta">
+      <a routerLink="/login" class="btn btn-secondary btn-sm">Iniciar Sesión</a>
+      <a routerLink="/recargar" class="btn btn-primary btn-sm">Recargar Ahora</a>
+    </div>
+
+    <!-- Mobile Hamburger -->
+    <button class="mobile-toggle" (click)="toggleMobileMenu()" [attr.aria-expanded]="mobileMenuOpen()">
+      <span [class.open]="mobileMenuOpen()"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" [class.open]="mobileMenuOpen()">
+    <ul>
+      <li><a routerLink="/" (click)="toggleMobileMenu()">Inicio</a></li>
+      <li><a routerLink="/recargar" (click)="toggleMobileMenu()">Recargar</a></li>
+      <li><a routerLink="/lineas-virtuales" (click)="toggleMobileMenu()">Líneas Virtuales</a></li>
+      <li><a routerLink="/historial" (click)="toggleMobileMenu()">Historial</a></li>
+    </ul>
+    <div class="mobile-cta">
+      <a routerLink="/login" class="btn btn-secondary" (click)="toggleMobileMenu()">Iniciar Sesión</a>
+      <a routerLink="/recargar" class="btn btn-primary" (click)="toggleMobileMenu()">Recargar Ahora</a>
+    </div>
+  </div>
+</nav>

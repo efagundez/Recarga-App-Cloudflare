@@ -1,0 +1,80 @@
+<section class="hero">
+  <!-- Background Effects -->
+  <div class="hero-bg">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <div class="container hero-content">
+    <!-- Badge -->
+    <div class="hero-badge animate-fade-in-up" style="animation-delay:0.1s">
+      <span class="badge badge-success">
+        <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg>
+        Servicio en línea
+      </span>
+      <span class="badge-text">+50,000 recargas exitosas</span>
+    </div>
+
+    <!-- Heading -->
+    <h1 class="hero-title animate-fade-in-up" style="animation-delay:0.2s">
+      Recarga al instante<br/>
+      <span class="text-gradient">cualquier operadora</span><br/>
+      en Venezuela
+    </h1>
+
+    <p class="hero-subtitle animate-fade-in-up" style="animation-delay:0.3s">
+      Digitel, Movistar y Movilnet. Procesamiento en segundos,<br/>
+      desde cualquier lugar del mundo.
+    </p>
+
+    <!-- CTA Buttons -->
+    <div class="hero-actions animate-fade-in-up" style="animation-delay:0.4s">
+      <a routerLink="/recargar" class="btn btn-primary btn-lg">
+        ⚡ Recargar Ahora
+      </a>
+      <a routerLink="/lineas-virtuales" class="btn btn-secondary btn-lg">
+        📲 Líneas Virtuales
+      </a>
+    </div>
+
+    <!-- Operator Pills -->
+    <div class="operator-pills animate-fade-in-up" style="animation-delay:0.5s">
+      <span class="pill-label">Operadoras disponibles:</span>
+      @for (op of operators; track op.name) {
+        <div class="operator-pill">
+          <span class="op-emoji">{{ op.logo }}</span>
+          <span class="op-name">{{ op.name }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Stats Bottom -->
+  <div class="hero-stats animate-fade-in-up" style="animation-delay:0.6s">
+    <div class="container">
+      <div class="stats-row">
+        <div class="stat-item">
+          <span class="stat-number">+50K</span>
+          <span class="stat-label">Recargas Procesadas</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">3</span>
+          <span class="stat-label">Operadoras</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">99.9%</span>
+          <span class="stat-label">Disponibilidad</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">&lt;30s</span>
+          <span class="stat-label">Tiempo Promedio</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

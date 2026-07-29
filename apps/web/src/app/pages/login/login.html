@@ -1,0 +1,81 @@
+<div class="login-container">
+  <div class="login-box">
+    <div class="login-header">
+      <img src="https://visualrecarga.sytes.net/assets/images/logo.png" alt="Visual Recarga Logo" class="logo" onerror="this.src='/favicon.ico'" />
+      <h2>Entrada al sistema</h2>
+      <p class="subtitle">Ingrese sus credenciales de acceso</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      
+      <!-- Campos de Login -->
+      <div class="form-group">
+        <label for="grupo">Grupo:</label>
+        <div class="input-wrapper">
+          <i class="icon-building"></i>
+          <input 
+            type="text" 
+            id="grupo" 
+            name="grupo"
+            [(ngModel)]="grupo"
+            placeholder="RECARGA1"
+            required
+            [disabled]="loading()"
+          >
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="usuario">Usuario:</label>
+        <div class="input-wrapper">
+          <i class="icon-user"></i>
+          <input 
+            type="text" 
+            id="usuario" 
+            name="usuario"
+            [(ngModel)]="usuario"
+            placeholder="ADMIN"
+            required
+            [disabled]="loading()"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="contrasenia">Contraseña:</label>
+        <div class="input-wrapper">
+          <i class="icon-lock"></i>
+          <input 
+            [type]="showPassword() ? 'text' : 'password'" 
+            id="contrasenia" 
+            name="contrasenia"
+            [(ngModel)]="contrasenia"
+            placeholder="********"
+            required
+            [disabled]="loading()"
+          >
+          <button type="button" class="btn-icon" (click)="togglePassword()">
+            <i [class]="showPassword() ? 'icon-eye-off' : 'icon-eye'"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage()">
+        <i class="icon-alert-circle"></i>
+        {{ errorMessage() }}
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="loading()">
+        <span *ngIf="loading()" class="spinner"></span>
+        <span>Ingresar</span>
+      </button>
+
+    </form>
+    
+    <div class="login-footer">
+      <p>Contacto:</p>
+      <p>Call Center +58(212)263-43-45</p>
+      <p>callcenter@esconcorp.com</p>
+    </div>
+  </div>
+</div>
