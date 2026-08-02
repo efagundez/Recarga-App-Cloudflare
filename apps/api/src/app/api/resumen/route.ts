@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { apiSuccess, apiError } from '@/lib/apiResponse';
@@ -45,7 +46,7 @@ export async function GET(req: NextRequest) {
       return apiError('Vendedor no encontrado.', '04', 404);
     }
 
-    return apiSuccess(resumen, 'Resumen del día.');
+    return apiSuccess(resumen, 'Resumen del dÃ­a.');
   } catch (error) {
     console.error('[GET /api/resumen]', error);
     return apiError('Error al obtener el resumen.');
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
       return apiError('Vendedor no encontrado.', '04', 404);
     }
 
-    return apiSuccess(resumen, 'Resumen del día.');
+    return apiSuccess(resumen, 'Resumen del dÃ­a.');
   } catch (error) {
     console.error('[POST /api/resumen]', error);
     return apiError('Error al obtener el resumen.');

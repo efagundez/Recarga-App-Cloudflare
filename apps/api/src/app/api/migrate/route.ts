@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import { NextRequest } from 'next/server';
 import mongoose from 'mongoose';
 import prisma from '@/lib/prisma';
@@ -10,21 +11,21 @@ import MensajeModel from '@/models/Mensaje';
 import RechargeModel from '@/models/Recharge';
 
 export async function POST(req: NextRequest) {
-  // ── Auth guard ─────────────────────────────────────────────────────────────
+  // â”€â”€ Auth guard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const migrateKey = req.headers.get('x-migrate-key');
   const expectedKey = process.env.MIGRATE_SECRET;
 
   if (!expectedKey) {
-    return apiError('MIGRATE_SECRET no está configurado en el servidor.', '99', 500);
+    return apiError('MIGRATE_SECRET no estÃ¡ configurado en el servidor.', '99', 500);
   }
   if (migrateKey !== expectedKey) {
-    return apiError('No autorizado. Header X-Migrate-Key inválido.', '01', 401);
+    return apiError('No autorizado. Header X-Migrate-Key invÃ¡lido.', '01', 401);
   }
 
-  // ── MongoDB connection ──────────────────────────────────────────────────────
+  // â”€â”€ MongoDB connection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const mongoUri = process.env.MONGODB_URI;
   if (!mongoUri) {
-    return apiError('MONGODB_URI no está configurado en el servidor.', '99', 500);
+    return apiError('MONGODB_URI no estÃ¡ configurado en el servidor.', '99', 500);
   }
 
   try {
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
       mensajes:  0,
     };
 
-    // ── Grupos (extraídos de users) ────────────────────────────────────────────
+    // â”€â”€ Grupos (extraÃ­dos de users) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const mongoUsers = await UserModel.find({}).lean();
     const uniqueGrupos = [...new Set(mongoUsers.map((u: any) => u.grupo).filter(Boolean))] as string[];
 
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
       summary.grupos++;
     }
 
-    // ── Bancos ─────────────────────────────────────────────────────────────────
+    // â”€â”€ Bancos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const mongoBancos = await BancoModel.find({}).lean();
     for (const b of mongoBancos) {
       const bancoData = b as any;
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
       summary.bancos++;
     }
 
-    // ── Productos ──────────────────────────────────────────────────────────────
+    // â”€â”€ Productos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const mongoProductos = await ProductoModel.find({}).lean();
     for (const p of mongoProductos) {
       const prod = p as any;
@@ -101,7 +102,7 @@ export async function POST(req: NextRequest) {
       summary.productos++;
     }
 
-    // ── Users ──────────────────────────────────────────────────────────────────
+    // â”€â”€ Users â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // Re-fetch with password (select: false in schema)
     const mongoUsersWithPwd = await UserModel.find({}).select('+password').lean();
     let idVendedorCounter = 1;
@@ -135,7 +136,7 @@ export async function POST(req: NextRequest) {
       summary.users++;
     }
 
-    // ── Recharges ──────────────────────────────────────────────────────────────
+    // â”€â”€ Recharges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const mongoRecharges = await RechargeModel.find({}).lean();
     let nroCounter = 100000;
 
@@ -168,7 +169,7 @@ export async function POST(req: NextRequest) {
       summary.recharges++;
     }
 
-    // ── Depositos ──────────────────────────────────────────────────────────────
+    // â”€â”€ Depositos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const mongoDepositos = await DepositoModel.find({}).lean();
     let depositoCounter = 1;
 
@@ -179,7 +180,7 @@ export async function POST(req: NextRequest) {
       await prisma.deposito.upsert({
         where:  { id_deposito },
         update: {
-          estado: dep.estado ?? 'En Tránsito',
+          estado: dep.estado ?? 'En TrÃ¡nsito',
         },
         create: {
           id_deposito,
@@ -189,13 +190,13 @@ export async function POST(req: NextRequest) {
           nro_deposito:  dep.nro_deposito ?? null,
           monto:         dep.monto ?? 0,
           fecha:         dep.fecha ?? null,
-          estado:        dep.estado ?? 'En Tránsito',
+          estado:        dep.estado ?? 'En TrÃ¡nsito',
         },
       });
       summary.depositos++;
     }
 
-    // ── Mensajes ───────────────────────────────────────────────────────────────
+    // â”€â”€ Mensajes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const mongoMensajes = await MensajeModel.find({}).lean();
     let mensajeCounter = 1;
 
@@ -212,7 +213,7 @@ export async function POST(req: NextRequest) {
           id_mensaje,
           id_vendedor: Number(msg.id_vendedor) || 1,
           grupo:       msg.grupo ?? 'RECARGA1',
-          titulo:      msg.titulo ?? 'Sin título',
+          titulo:      msg.titulo ?? 'Sin tÃ­tulo',
           mensaje:     msg.contenido ?? msg.mensaje ?? '',
           fecha_envio: msg.fecha
             ? new Date(msg.fecha).toISOString().split('T')[0]
@@ -225,12 +226,12 @@ export async function POST(req: NextRequest) {
 
     return apiSuccess(
       { migrated: summary },
-      'Migración completada.'
+      'MigraciÃ³n completada.'
     );
   } catch (error: any) {
-    console.error('[migrate] Error durante la migración:', error);
+    console.error('[migrate] Error durante la migraciÃ³n:', error);
     return apiError(
-      `Error durante la migración: ${error?.message ?? 'Error desconocido'}`,
+      `Error durante la migraciÃ³n: ${error?.message ?? 'Error desconocido'}`,
       '99',
       500
     );

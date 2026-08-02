@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import jwt from 'jsonwebtoken';
 import prisma from '@/lib/prisma';
 import { apiSuccess, apiError } from '@/lib/apiResponse';
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
     try {
       jwt.verify(token, process.env.JWT_SECRET as string);
     } catch {
-      return apiError('Token inválido o expirado', '99');
+      return apiError('Token invÃ¡lido o expirado', '99');
     }
 
     const body = await request.json();
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
 
     const numericMonto = Number(monto);
     if (isNaN(numericMonto) || numericMonto <= 0) {
-      return apiError('Monto inválido', '99');
+      return apiError('Monto invÃ¡lido', '99');
     }
 
     // Buscar usuario
@@ -46,7 +47,7 @@ export async function POST(request: Request) {
       return apiError('Producto no encontrado', '99');
     }
 
-    // Validar monto mínimo y máximo
+    // Validar monto mÃ­nimo y mÃ¡ximo
     if (numericMonto < producto.monto_minimo || numericMonto > producto.monto_maximo) {
       return apiError(
         `El monto debe estar entre ${producto.monto_minimo} y ${producto.monto_maximo}`,
@@ -54,16 +55,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validar múltiplo
+    // Validar mÃºltiplo
     if (producto.multiplo > 0 && numericMonto % producto.multiplo !== 0) {
-      return apiError(`El monto debe ser múltiplo de ${producto.multiplo}`, '99');
+      return apiError(`El monto debe ser mÃºltiplo de ${producto.multiplo}`, '99');
     }
 
-    // Calcular comisión
+    // Calcular comisiÃ³n
     const comision = numericMonto * (user.comision / 100);
     const nro_transaccion = Date.now();
 
-    // Crear transacción
+    // Crear transacciÃ³n
     await prisma.recharge.create({
       data: {
         nro_transaccion,

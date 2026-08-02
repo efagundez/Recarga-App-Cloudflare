@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import prisma from '@/lib/prisma';
 import { apiSuccess, apiError } from '@/lib/apiResponse';
 
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
       return apiError('No se encontraron transacciones para este vendedor', '01');
     }
 
-    return apiSuccess(lastTx, 'Última transacción realizada.');
+    return apiSuccess(lastTx, 'Ãšltima transacciÃ³n realizada.');
   } catch (error: any) {
     return apiError(error.message || 'Error en el servidor', '01');
   }

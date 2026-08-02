@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import { NextResponse } from 'next/server';
 
 const openApiSpec = {
@@ -5,10 +6,10 @@ const openApiSpec = {
   info: {
     title: 'Recarga App API',
     description:
-      'API REST para la plataforma de recargas telefónicas y líneas virtuales para Venezuela.\n\n' +
-      '### Autenticación\n' +
-      'La mayoría de los endpoints requieren un **Bearer Token** en la cabecera `Authorization`.\n' +
-      'Obtén tu token con `POST /api/auth/login` o `POST /api/auth/register`.',
+      'API REST para la plataforma de recargas telefÃ³nicas y lÃ­neas virtuales para Venezuela.\n\n' +
+      '### AutenticaciÃ³n\n' +
+      'La mayorÃ­a de los endpoints requieren un **Bearer Token** en la cabecera `Authorization`.\n' +
+      'ObtÃ©n tu token con `POST /api/auth/login` o `POST /api/auth/register`.',
     version: '1.0.0',
     contact: {
       name: 'Recarga App Team',
@@ -21,8 +22,8 @@ const openApiSpec = {
     },
   ],
   tags: [
-    { name: 'Auth', description: 'Registro e inicio de sesión' },
-    { name: 'Recargas', description: 'Operaciones CRUD de recargas telefónicas' },
+    { name: 'Auth', description: 'Registro e inicio de sesiÃ³n' },
+    { name: 'Recargas', description: 'Operaciones CRUD de recargas telefÃ³nicas' },
     { name: 'Health', description: 'Endpoints de salud / prueba' },
   ],
   paths: {
@@ -30,7 +31,7 @@ const openApiSpec = {
       get: {
         tags: ['Health'],
         summary: 'Endpoint de prueba',
-        description: 'Retorna un mensaje de saludo para verificar que la API está activa.',
+        description: 'Retorna un mensaje de saludo para verificar que la API estÃ¡ activa.',
         responses: {
           '200': {
             description: 'Saludo exitoso',
@@ -65,7 +66,7 @@ const openApiSpec = {
             },
           },
           '400': {
-            description: 'Datos inválidos o correo ya registrado',
+            description: 'Datos invÃ¡lidos o correo ya registrado',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ErrorResponse' },
@@ -78,7 +79,7 @@ const openApiSpec = {
     '/api/auth/login': {
       post: {
         tags: ['Auth'],
-        summary: 'Iniciar sesión',
+        summary: 'Iniciar sesiÃ³n',
         requestBody: {
           required: true,
           content: {
@@ -89,7 +90,7 @@ const openApiSpec = {
         },
         responses: {
           '200': {
-            description: 'Sesión iniciada exitosamente',
+            description: 'SesiÃ³n iniciada exitosamente',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/AuthResponse' },
@@ -97,7 +98,7 @@ const openApiSpec = {
             },
           },
           '400': {
-            description: 'Faltan email o contraseña',
+            description: 'Faltan email o contraseÃ±a',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ErrorResponse' },
@@ -105,7 +106,7 @@ const openApiSpec = {
             },
           },
           '401': {
-            description: 'Credenciales inválidas',
+            description: 'Credenciales invÃ¡lidas',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ErrorResponse' },
@@ -233,7 +234,7 @@ const openApiSpec = {
             },
           },
           '403': {
-            description: 'Prohibido – no es dueño ni admin',
+            description: 'Prohibido â€“ no es dueÃ±o ni admin',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ErrorResponse' },
@@ -287,7 +288,7 @@ const openApiSpec = {
             },
           },
           '400': {
-            description: 'Estado inválido',
+            description: 'Estado invÃ¡lido',
             content: {
               'application/json': {
                 schema: { $ref: '#/components/schemas/ErrorResponse' },
@@ -378,16 +379,16 @@ const openApiSpec = {
         required: ['email', 'password'],
         properties: {
           email: { type: 'string', format: 'email', example: 'usuario@ejemplo.com' },
-          password: { type: 'string', format: 'password', example: 'miContraseña123' },
+          password: { type: 'string', format: 'password', example: 'miContraseÃ±a123' },
         },
       },
       RegisterRequest: {
         type: 'object',
         required: ['email', 'password'],
         properties: {
-          name: { type: 'string', example: 'Juan Pérez' },
+          name: { type: 'string', example: 'Juan PÃ©rez' },
           email: { type: 'string', format: 'email', example: 'juan@ejemplo.com' },
-          password: { type: 'string', format: 'password', example: 'miContraseña123' },
+          password: { type: 'string', format: 'password', example: 'miContraseÃ±a123' },
         },
       },
       AuthResponse: {
@@ -402,7 +403,7 @@ const openApiSpec = {
             type: 'object',
             properties: {
               id: { type: 'string', example: '664f1a2b3c4d5e6f7a8b9c0d' },
-              name: { type: 'string', example: 'Juan Pérez' },
+              name: { type: 'string', example: 'Juan PÃ©rez' },
               email: { type: 'string', example: 'juan@ejemplo.com' },
               role: {
                 type: 'string',
@@ -470,7 +471,7 @@ const openApiSpec = {
         type: 'object',
         properties: {
           success: { type: 'boolean', example: false },
-          message: { type: 'string', example: 'Descripción del error' },
+          message: { type: 'string', example: 'DescripciÃ³n del error' },
         },
       },
     },

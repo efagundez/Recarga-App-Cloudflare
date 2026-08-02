@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import jwt from 'jsonwebtoken';
 import prisma from '@/lib/prisma';
 import { apiSuccess, apiError } from '@/lib/apiResponse';
@@ -8,17 +9,17 @@ export async function POST(request: Request) {
     const { grupo, usuario, contrasenia } = body;
 
     if (!grupo || !usuario || !contrasenia) {
-      return apiError('Parámetros de entrada inválidos (grupo, usuario y contrasenia son requeridos)', '01');
+      return apiError('ParÃ¡metros de entrada invÃ¡lidos (grupo, usuario y contrasenia son requeridos)', '01');
     }
 
     const user = await prisma.user.findFirst({ where: { usuario, grupo } });
 
     if (!user) {
-      return apiError('Usuario o contraseña incorrectos.', '01');
+      return apiError('Usuario o contraseÃ±a incorrectos.', '01');
     }
 
     if (body.contrasenia !== user.contrasenia) {
-      return apiError('Usuario o contraseña incorrectos.', '01');
+      return apiError('Usuario o contraseÃ±a incorrectos.', '01');
     }
 
     const token = jwt.sign(

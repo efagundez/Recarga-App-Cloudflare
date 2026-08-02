@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import prisma from '@/lib/prisma';
 import { apiSuccess, apiError } from '@/lib/apiResponse';
 
@@ -15,10 +16,10 @@ export async function POST(request: Request) {
     });
 
     if (!tx) {
-      return apiError('Transacción no encontrada', '01');
+      return apiError('TransacciÃ³n no encontrada', '01');
     }
 
-    return apiSuccess({ transaccion: tx }, 'Detalle de la transacción.');
+    return apiSuccess({ transaccion: tx }, 'Detalle de la transacciÃ³n.');
   } catch (error: any) {
     return apiError(error.message || 'Error en el servidor', '01');
   }

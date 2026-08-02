@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import prisma from '@/lib/prisma';
 import { apiSuccess, apiError } from '@/lib/apiResponse';
 
@@ -11,12 +12,12 @@ async function handleOperadora(id_producto?: number | null) {
       return apiError('Producto u operadora no encontrada', '01');
     }
 
-    return apiSuccess({ operadora: producto }, 'Límites de operadora.');
+    return apiSuccess({ operadora: producto }, 'LÃ­mites de operadora.');
   }
 
   // Sin id_producto: retorna todos los activos
   const productos = await prisma.producto.findMany({ where: { estado: 'ACTIVO' } });
-  return apiSuccess({ operadora: productos }, 'Límites de operadora.');
+  return apiSuccess({ operadora: productos }, 'LÃ­mites de operadora.');
 }
 
 export async function GET(request: Request) {

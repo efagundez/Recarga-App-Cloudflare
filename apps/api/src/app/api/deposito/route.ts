@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { apiSuccess, apiError } from '@/lib/apiResponse';
@@ -28,13 +29,13 @@ export async function POST(req: NextRequest) {
         nro_deposito,
         monto,
         fecha,
-        estado: 'En Tránsito',
+        estado: 'En TrÃ¡nsito',
       },
     });
 
-    return apiSuccess({ id_deposito: deposito.id_deposito }, 'Depósito registrado exitosamente.');
+    return apiSuccess({ id_deposito: deposito.id_deposito }, 'DepÃ³sito registrado exitosamente.');
   } catch (error) {
     console.error('[POST /api/deposito]', error);
-    return apiError('Error al registrar el depósito.');
+    return apiError('Error al registrar el depÃ³sito.');
   }
 }

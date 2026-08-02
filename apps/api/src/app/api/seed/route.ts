@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import { NextRequest, NextResponse } from 'next/server';
 import { seedPrismaDatabase } from '@/lib/seedPrisma';
 import { apiSuccess, apiError } from '@/lib/apiResponse';
@@ -12,10 +13,10 @@ export async function POST(req: NextRequest) {
   const expectedKey = process.env.MIGRATE_SECRET;
 
   if (!expectedKey) {
-    return apiError('MIGRATE_SECRET no está configurado en el servidor.', '99', 500);
+    return apiError('MIGRATE_SECRET no estÃ¡ configurado en el servidor.', '99', 500);
   }
   if (seedKey !== expectedKey) {
-    return apiError('No autorizado. Header X-Seed-Key inválido.', '01', 401);
+    return apiError('No autorizado. Header X-Seed-Key invÃ¡lido.', '01', 401);
   }
 
   try {

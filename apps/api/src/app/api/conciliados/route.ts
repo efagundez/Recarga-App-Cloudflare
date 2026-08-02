@@ -1,3 +1,4 @@
+﻿export const runtime = 'edge';
 import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { apiSuccess, apiError } from '@/lib/apiResponse';
@@ -13,9 +14,9 @@ export async function POST(req: NextRequest) {
       orderBy: { createdAt: 'desc' },
     });
 
-    return apiSuccess({ conciliados }, 'Depósitos conciliados.');
+    return apiSuccess({ conciliados }, 'DepÃ³sitos conciliados.');
   } catch (error) {
     console.error('[POST /api/conciliados]', error);
-    return apiError('Error al obtener depósitos conciliados.');
+    return apiError('Error al obtener depÃ³sitos conciliados.');
   }
 }
