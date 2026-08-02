@@ -1,18 +1,8 @@
-//@ts-check
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { composePlugins, withNx } = require('@nx/next');
-
 /**
- * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
+ * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-  // Use this to set Nx-specific options
-  // See: https://nx.dev/recipes/next/next-config-setup
-  nx: {},
-  // Required for Render / production deployments
-  output: 'standalone',
-  // Keep Prisma client out of the Next.js bundle (native binaries)
+  // En Cloudflare Edge no necesitamos 'standalone' ni el wrapper de Nx
   serverExternalPackages: ['@prisma/client', 'prisma'],
   async headers() {
     return [
@@ -29,9 +19,4 @@ const nextConfig = {
   }
 };
 
-const plugins = [
-  // Add more Next.js plugins to this list if needed.
-  withNx,
-];
-
-module.exports = composePlugins(...plugins)(nextConfig);
+module.exports = nextConfig;
