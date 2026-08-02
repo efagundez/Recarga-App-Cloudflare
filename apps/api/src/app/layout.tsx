@@ -7,7 +7,7 @@ export const metadata = {
 
 // Auto-seed on cold start only at runtime (not during build)
 if (process.env.DATABASE_URL && process.env.NODE_ENV !== 'test') {
-  import('@/lib/seedPrisma').then(({ seedPrismaDatabase }) => {
+  import('../lib/seedPrisma').then(({ seedPrismaDatabase }) => {
     seedPrismaDatabase().catch((err: Error) => {
       console.error('[layout] Auto-seed failed:', err?.message ?? err);
     });
