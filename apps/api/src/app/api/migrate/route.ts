@@ -1,14 +1,14 @@
 ﻿export const runtime = 'edge';
 import { NextRequest } from 'next/server';
 import mongoose from 'mongoose';
-import prisma from '@/lib/prisma';
-import { apiSuccess, apiError } from '@/lib/apiResponse';
-import UserModel from '@/models/User';
-import ProductoModel from '@/models/Producto';
-import BancoModel from '@/models/Banco';
-import DepositoModel from '@/models/Deposito';
-import MensajeModel from '@/models/Mensaje';
-import RechargeModel from '@/models/Recharge';
+import prisma from '../../../lib/prisma';
+import { apiSuccess, apiError } from '../../../lib/apiResponse';
+import UserModel from '../../../models/User';
+import ProductoModel from '../../../models/Producto';
+import BancoModel from '../../../models/Banco';
+import DepositoModel from '../../../models/Deposito';
+import MensajeModel from '../../../models/Mensaje';
+import RechargeModel from '../../../models/Recharge';
 
 export async function POST(req: NextRequest) {
   // â”€â”€ Auth guard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -242,3 +242,4 @@ export async function POST(req: NextRequest) {
     }
   }
 }
+

@@ -1,7 +1,7 @@
 ﻿export const runtime = 'edge';
 import { NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
-import { apiSuccess, apiError } from '@/lib/apiResponse';
+import prisma from '../../../lib/prisma';
+import { apiSuccess, apiError } from '../../../lib/apiResponse';
 
 async function getHistorial(id_vendedor: number, cuenta: string) {
   return prisma.recharge.findMany({
@@ -52,3 +52,4 @@ export async function POST(req: NextRequest) {
     return apiError('Error al obtener historial de cuenta.');
   }
 }
+

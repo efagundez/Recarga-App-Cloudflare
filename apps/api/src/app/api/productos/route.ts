@@ -1,6 +1,6 @@
 ﻿export const runtime = 'edge';
-import prisma from '@/lib/prisma';
-import { apiSuccess, apiError } from '@/lib/apiResponse';
+import prisma from '../../../lib/prisma';
+import { apiSuccess, apiError } from '../../../lib/apiResponse';
 
 async function getProductos() {
   const productos = await prisma.producto.findMany({ where: { estado: 'ACTIVO' } });
@@ -22,3 +22,4 @@ export async function POST() {
     return apiError(error.message || 'Error en el servidor', '99');
   }
 }
+

@@ -1,7 +1,7 @@
 ﻿export const runtime = 'edge';
 import { NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
-import { apiSuccess, apiError } from '@/lib/apiResponse';
+import prisma from '../../../lib/prisma';
+import { apiSuccess, apiError } from '../../../lib/apiResponse';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,3 +20,4 @@ export async function POST(req: NextRequest) {
     return apiError('Error al obtener depÃ³sitos conciliados.');
   }
 }
+

@@ -1,7 +1,7 @@
 ﻿export const runtime = 'edge';
 import { NextRequest } from 'next/server';
-import prisma from '@/lib/prisma';
-import { apiSuccess, apiError } from '@/lib/apiResponse';
+import prisma from '../../../lib/prisma';
+import { apiSuccess, apiError } from '../../../lib/apiResponse';
 
 async function getResumen(id_vendedor: number) {
   const now = new Date();
@@ -77,3 +77,4 @@ export async function POST(req: NextRequest) {
     return apiError('Error al obtener el resumen.');
   }
 }
+
