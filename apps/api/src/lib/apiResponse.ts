@@ -39,7 +39,7 @@ export function apiResponse(
   return NextResponse.json(body, { status });
 }
 
-export function apiSuccess(data?: any, mensaje: string = 'Operación exitosa', extra: Record<string, any> = {}) {
+export function apiSuccess(data?: any, mensaje = 'Operación exitosa', extra: Record<string, any> = {}) {
   return apiResponse({
     codigo: '00',
     mensaje,
@@ -49,7 +49,7 @@ export function apiSuccess(data?: any, mensaje: string = 'Operación exitosa', e
   });
 }
 
-export function apiError(mensaje: string = 'Error en la operación', codigo: string = '99', status: number = 400, extra: Record<string, any> = {}) {
+export function apiError(mensaje = 'Error en la operación', codigo = '99', status = 400, extra: Record<string, any> = {}) {
   return apiResponse({
     codigo,
     mensaje,
