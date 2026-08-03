@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "prisma:generate": "prisma generate --schema=apps/api/prisma/schema.prisma"
+    "prisma:generate": "prisma generate --schema=apps/api/prisma/schema.prisma",
+    "prisma:push": "prisma db push --schema=apps/api/prisma/schema.prisma --accept-data-loss"
   },
   "private": true,
   "devDependencies": {
