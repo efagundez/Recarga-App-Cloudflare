@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Grupo {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+  estado String @default("ACTIVO")
+
+  users     User[]
+  mensajes  Mensaje[]
+  recharges Recharge[]
+
+  @@map("grupos")
+}
+
+model User {
+  id                  Int      @id @default(autoincrement())
+  id_vendedor         Int      @unique
+  grupo               String
+  usuario             String   @unique
+  contrasenia         String
+  nombre              String?
+  saldo               Float    @default(0)
+  comision            Float    @default(0)
+  estado              String   @default("ACTIVO")
+  role                String   @default("VENDEDOR")
+  rif                 String?
+  direccion           String?
+  telefonos           String?
+  contacto            String?
+  correo_electronico  String?
+  zona_postal         String?
+  estado_venezuela    String?
+  municipio           String?
+  ciudad              String?
+  region              String?
+  tipo_comercio       String?
+  codigo_sap_digitel  String?
+  codigo_sap_movistar String?
+  tipo_saldo          String?
+  condicion           String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  grupoRel  Grupo?     @relation(fields: [grupo], references: [nombre])
+  recharges Recharge[]
+  depositos Deposito[]
+  mensajes  Mensaje[]
+
+  @@map("users")
+}
+
+model Producto {
+  id                 Int     @id @default(autoincrement())
+  id_producto        Int     @unique
+  nombre             String
+  operadora          String
+  monto_minimo       Float
+  monto_maximo       Float
+  multiplo           Float   @default(1)
+  maximo_diario_tlf  Int     @default(0)
+  maximo_mensual_tlf Int     @default(0)
+  limites            String?
+  estado             String  @default("ACTIVO")
+
+  recharges Recharge[]
+
+  @@map("productos")
+}
+
+model Banco {
+  id       Int    @id @default(autoincrement())
+  id_banco Int    @unique
+  nombre   String
+  codigo   String
+
+  depositos Deposito[]
+
+  @@map("bancos")
+}
+
+model Recharge {
+  id                  Int      @id @default(autoincrement())
+  nro_transaccion     Int      @unique
+  id_vendedor         Int
+  grupo               String
+  id_producto         Int
+  producto            String?
+  cuenta              String
+  monto               Float
+  resultado           String   @default("AP")
+  status              String   @default("APROBADA")
+  error               String?
+  respuesta           String?
+  fecha               String?
+  hora                String?
+  comision            Float    @default(0)
+  porcentaje_comision Float    @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user        User?     @relation(fields: [id_vendedor], references: [id_vendedor])
+  productoRel Producto? @relation(fields: [id_producto], references: [id_producto])
+  grupoRel    Grupo?    @relation(fields: [grupo], references: [nombre])
+
+  @@map("recharges")
+}
+
+model Deposito {
+  id                 Int      @id @default(autoincrement())
+  id_deposito        Int      @unique
+  id_vendedor        Int
+  id_banco           Int
+  banco_origen       String?
+  cuenta_destino     String?
+  tipo_deposito      String?
+  nro_deposito       String?
+  monto              Float
+  fecha              String?
+  estado             String   @default("En Tránsito")
+  saldo_al_conciliar Float?
+  verificado_por     String?
+  verificado_el      String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user  User?  @relation(fields: [id_vendedor], references: [id_vendedor])
+  banco Banco? @relation(fields: [id_banco], references: [id_banco])
+
+  @@map("depositos")
+}
+
+model Mensaje {
+  id          Int      @id @default(autoincrement())
+  id_mensaje  Int      @unique
+  id_vendedor Int
+  grupo       String
+  titulo      String
+  mensaje     String
+  fecha_envio String?
+  leido       Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user     User?  @relation(fields: [id_vendedor], references: [id_vendedor])
+  grupoRel Grupo? @relation(fields: [grupo], references: [nombre])
+
+  @@map("mensajes")
+}
