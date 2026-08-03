@@ -1,5 +1,4 @@
-﻿export const runtime = 'edge';
-import prisma from '../../../lib/prisma';
+﻿import prisma from '../../../lib/prisma';
 import { apiSuccess, apiError } from '../../../lib/apiResponse';
 
 async function getProductos() {
@@ -22,4 +21,5 @@ export async function POST() {
     return apiError(error.message || 'Error en el servidor', '99');
   }
 }
+
 

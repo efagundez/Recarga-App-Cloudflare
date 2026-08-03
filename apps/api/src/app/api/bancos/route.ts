@@ -1,5 +1,4 @@
-﻿export const runtime = 'edge';
-import { NextRequest } from 'next/server';
+﻿import { NextRequest } from 'next/server';
 import prisma from '../../../lib/prisma';
 import { apiSuccess, apiError } from '../../../lib/apiResponse';
 
@@ -22,4 +21,5 @@ export async function POST(_req: NextRequest) {
     return apiError('Error al obtener bancos.');
   }
 }
+
 

@@ -1,5 +1,4 @@
-﻿export const runtime = 'edge';
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { seedPrismaDatabase } from '../../../lib/seedPrisma';
 import { apiSuccess, apiError } from '../../../lib/apiResponse';
 
@@ -41,4 +40,5 @@ export async function GET() {
     return NextResponse.json({ ok: false, error: error?.message }, { status: 500 });
   }
 }
+
 

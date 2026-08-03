@@ -1,5 +1,4 @@
-﻿export const runtime = 'edge';
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 
 const openApiSpec = {
   openapi: '3.0.3',
@@ -485,4 +484,5 @@ export async function GET() {
     },
   });
 }
+
 

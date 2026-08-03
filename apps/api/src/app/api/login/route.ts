@@ -1,5 +1,4 @@
-﻿export const runtime = 'edge';
-import jwt from 'jsonwebtoken';
+﻿import jwt from 'jsonwebtoken';
 import prisma from '../../../lib/prisma';
 import { apiSuccess, apiError } from '../../../lib/apiResponse';
 
@@ -36,4 +35,5 @@ export async function POST(request: Request) {
     return apiError(error.message || 'Error en el servidor', '01');
   }
 }
+
 

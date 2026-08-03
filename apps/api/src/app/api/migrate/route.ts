@@ -1,5 +1,4 @@
-﻿export const runtime = 'edge';
-import { NextRequest } from 'next/server';
+﻿import { NextRequest } from 'next/server';
 import mongoose from 'mongoose';
 import prisma from '../../../lib/prisma';
 import { apiSuccess, apiError } from '../../../lib/apiResponse';
@@ -242,4 +241,5 @@ export async function POST(req: NextRequest) {
     }
   }
 }
+
 

@@ -1,5 +1,4 @@
-﻿export const runtime = 'edge';
-import prisma from '../../../lib/prisma';
+﻿import prisma from '../../../lib/prisma';
 import { apiSuccess, apiError } from '../../../lib/apiResponse';
 
 async function handleOperadora(id_producto?: number | null) {
@@ -43,4 +42,5 @@ export async function POST(request: Request) {
     return apiError(error.message || 'Error en el servidor', '01');
   }
 }
+
 
