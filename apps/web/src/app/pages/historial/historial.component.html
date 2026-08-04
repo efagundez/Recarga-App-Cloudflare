@@ -1,0 +1,104 @@
+<div class="historial-page">
+  <div class="historial-container">
+
+    <!-- No logueado -->
+    @if (!isLoggedIn()) {
+      <div class="card-glass text-center">
+        <div class="state-icon">🔐</div>
+        <h2>Acceso Restringido</h2>
+        <p>Inicia sesión para ver tu historial de recargas.</p>
+        <button class="btn btn-primary" (click)="openLogin()">Iniciar Sesión</button>
+      </div>
+    }
+
+    @if (isLoggedIn()) {
+      <!-- Header -->
+      <div class="historial-header">
+        <div>
+          <div class="badge">📋 Mi Historial</div>
+          <h1>Transacciones del Día</h1>
+        </div>
+        <div class="header-actions">
+          <div class="saldo-chip">
+            <span>Saldo</span>
+            <strong>${{ session()?.saldo ?? 0 }}</strong>
+          </div>
+          <button class="btn btn-secondary btn-sm" (click)="cargar()">↻ Actualizar</button>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      @if (loading()) {
+        <div class="loading-card card-glass">
+          <div class="spinner-ring"></div>
+          <p>Cargando transacciones...</p>
+        </div>
+      }
+
+      <!-- Error -->
+      @if (!loading() && error()) {
+        <div class="card-glass text-center">
+          <div class="state-icon">⚠️</div>
+          <p>{{ error() }}</p>
+          <button class="btn btn-secondary" (click)="cargar()">Reintentar</button>
+        </div>
+      }
+
+      <!-- Sin transacciones -->
+      @if (!loading() && !error() && transacciones().length === 0) {
+        <div class="card-glass text-center empty-state">
+          <div class="state-icon">📭</div>
+          <h3>Sin Transacciones Hoy</h3>
+          <p>Aún no has realizado ninguna recarga en el día de hoy.</p>
+          <a routerLink="/recargar" class="btn btn-primary">Hacer una Recarga</a>
+        </div>
+      }
+
+      <!-- Con transacciones -->
+      @if (!loading() && !error() && transacciones().length > 0) {
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card card-glass">
+            <span>Total Transacciones</span>
+            <strong>{{ transacciones().length }}</strong>
+          </div>
+          <div class="stat-card card-glass">
+            <span>Total Recargado</span>
+            <strong>${{ totalRecargado() | number:'1.2-2' }}</strong>
+          </div>
+          <div class="stat-card card-glass">
+            <span>Comisiones</span>
+            <strong>${{ totalComisiones() | number:'1.2-2' }}</strong>
+          </div>
+        </div>
+
+        <!-- Lista -->
+        <div class="transactions-list">
+          @for (tx of transacciones(); track tx.nro_transaccion) {
+            <div class="tx-card card-glass"
+                 [class.tx-aprobada]="tx.resultado === 'AP'"
+                 [class.tx-rechazada]="tx.resultado === 'RZ'">
+              <div class="tx-status">
+                <span class="status-dot"></span>
+                <span>{{ tx.resultado === 'AP' ? 'OK' : 'RZ' }}</span>
+              </div>
+              <div class="tx-info">
+                <div class="tx-top">
+                  <strong class="tx-product">{{ tx.producto || 'Recarga' }}</strong>
+                  <span class="tx-amount">${{ tx.monto | number:'1.2-2' }}</span>
+                </div>
+                <div class="tx-meta">
+                  <span>{{ tx.cuenta }}</span>
+                  <span>{{ tx.fecha }} {{ tx.hora }}</span>
+                </div>
+              </div>
+              <div class="tx-id">#{{ tx.nro_transaccion }}</div>
+            </div>
+          }
+        </div>
+      }
+    }
+
+  </div>
+</div>

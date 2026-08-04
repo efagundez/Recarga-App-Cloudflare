@@ -38,12 +38,14 @@ export interface IVentaResponse extends IApiBaseResponse {
 export interface IProducto {
   id_producto: number;
   nombre: string;
+  operadora?: string;
   monto_minimo: number;
   monto_maximo: number;
   multiplo: number;
   maximo_diario_tlf?: number;
   maximo_mensual_tlf?: number;
   limites?: string;
+  estado?: string;
 }
 
 export interface IProductosResponse extends IApiBaseResponse {

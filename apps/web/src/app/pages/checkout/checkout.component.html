@@ -1,67 +1,200 @@
-<div class="checkout-container">
-  <div class="checkout-box">
-    
-    <div class="checkout-header">
-      <img src="https://visualrecarga.sytes.net/assets/images/logo.png" alt="Visual Recarga Logo" class="logo" onerror="this.src='/favicon.ico'" />
-      <h2>Introduzca los datos de la recarga</h2>
-    </div>
+<div class="checkout-page">
+  <div class="checkout-container">
 
-    <form (ngSubmit)="confirm()" class="checkout-form">
-      
-      <div class="form-group">
-        <label for="producto">Producto:</label>
-        <select 
-          id="producto" 
-          name="producto" 
-          [(ngModel)]="rechargePayload.id_producto"
-          required
-          [disabled]="loading"
-        >
-          <option [value]="0">0 - Seleccione producto</option>
-          <option *ngFor="let prod of productos" [value]="prod.id_producto">
-            {{ prod.id_producto }} - {{ prod.nombre | uppercase }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="cuenta">Nro. Teléfono o Tarjeta:</label>
-        <input 
-          type="text" 
-          id="cuenta" 
-          name="cuenta"
-          [(ngModel)]="rechargePayload.cuenta"
-          placeholder="04120000000"
-          required
-          [disabled]="loading"
-        >
-      </div>
-
-      <div class="form-group amount-group">
-        <label for="monto">Monto a Recargar:</label>
-        <input 
-          type="number" 
-          id="monto" 
-          name="monto"
-          [(ngModel)]="rechargePayload.monto"
-          placeholder="60"
-          required
-          [disabled]="loading"
-        >
-      </div>
-
-      <div class="error-message" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn-verify" [disabled]="loading || rechargePayload.id_producto === 0">
-          <i class="icon-check"></i> Verificar
+    <!-- ESTADO: No logueado -->
+    @if (!isLoggedIn()) {
+      <div class="checkout-card card-glass text-center">
+        <div class="state-icon state-icon--warning">🔐</div>
+        <h2>Inicia Sesión para Continuar</h2>
+        <p>Necesitas una cuenta activa para procesar recargas en RecargaVE.</p>
+        <button class="btn btn-primary proceed-btn" (click)="openLogin()">
+          Iniciar Sesión
         </button>
-        <button type="button" class="btn-clear" [disabled]="loading" (click)="rechargePayload.cuenta=''; rechargePayload.monto=0">
-          <i class="icon-refresh"></i> Limpiar
-        </button>
+        <button class="btn btn-secondary" (click)="goHome()">← Volver al Inicio</button>
       </div>
-    </form>
+    }
+
+    <!-- ESTADO: Formulario de Confirmación -->
+    @if (isLoggedIn() && step() === 'confirm') {
+      <div class="checkout-card card-glass animate-fade-in">
+        
+        <!-- Encabezado con Saldo -->
+        <div class="checkout-header">
+          <div>
+            <div class="checkout-badge">⚡ Confirmar Recarga</div>
+            <h1 class="checkout-title">Detalles de la Transacción</h1>
+          </div>
+          <div class="saldo-chip">
+            <span>Tu Saldo</span>
+            <strong>${{ session()?.saldo ?? 0 }} USD</strong>
+          </div>
+        </div>
+
+        <form [formGroup]="checkoutForm" (ngSubmit)="confirm()" class="checkout-form">
+          
+          <!-- Selección de Producto -->
+          <div class="form-group">
+            <label for="producto">Producto / Operadora</label>
+            @if (loadingProductos()) {
+              <div class="skeleton-field">Cargando productos...</div>
+            } @else {
+              <div class="select-wrapper">
+                <select 
+                  id="producto" 
+                  formControlName="id_producto"
+                  class="input-field"
+                  [class.is-invalid]="checkoutForm.get('id_producto')?.invalid && checkoutForm.get('id_producto')?.touched">
+                  <option [value]="0">— Selecciona el Producto —</option>
+                  @for (prod of productos(); track prod.id_producto) {
+                    <option [value]="prod.id_producto">
+                      {{ prod.nombre }} — Min ${{ prod.monto_minimo }} / Max ${{ prod.monto_maximo }}
+                    </option>
+                  }
+                </select>
+                <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+              @if (checkoutForm.get('id_producto')?.invalid && checkoutForm.get('id_producto')?.touched) {
+                <span class="field-error">Selecciona un producto</span>
+              }
+            }
+          </div>
+
+          <!-- Número de Teléfono -->
+          <div class="form-group">
+            <label for="cuenta">Número de Teléfono a Recargar</label>
+            <div class="input-wrapper" [class.is-invalid]="checkoutForm.get('cuenta')?.invalid && checkoutForm.get('cuenta')?.touched">
+              <div class="phone-prefix">
+                <span>🇻🇪</span>
+                <span>+58</span>
+              </div>
+              <input 
+                type="tel" 
+                id="cuenta" 
+                formControlName="cuenta"
+                class="input-field phone-input"
+                placeholder="0412 000 0000"
+                maxlength="11" />
+            </div>
+            @if (checkoutForm.get('cuenta')?.invalid && checkoutForm.get('cuenta')?.touched) {
+              <span class="field-error">Ingresa el número (10-11 dígitos)</span>
+            }
+          </div>
+
+          <!-- Monto -->
+          <div class="form-group">
+            <label for="monto">Monto en USD</label>
+            <div class="input-wrapper">
+              <span class="currency-prefix">$</span>
+              <input 
+                type="number" 
+                id="monto" 
+                formControlName="monto"
+                class="input-field monto-input"
+                placeholder="10"
+                min="1" />
+            </div>
+            @if (selectedProducto()) {
+              <span class="field-hint">
+                Rango permitido: ${{ selectedProducto()!.monto_minimo }} – ${{ selectedProducto()!.monto_maximo }} USD
+              </span>
+            }
+          </div>
+
+          <!-- Resumen Previo -->
+          @if (selectedProducto() && checkoutForm.get('cuenta')?.valid && checkoutForm.get('monto')?.value > 0) {
+            <div class="summary-preview animate-fade-in">
+              <div class="summary-row">
+                <span>Operadora</span>
+                <strong>{{ selectedProducto()!.nombre }}</strong>
+              </div>
+              <div class="summary-row">
+                <span>Número</span>
+                <strong>+58 {{ checkoutForm.get('cuenta')?.value }}</strong>
+              </div>
+              <div class="summary-row">
+                <span>Monto</span>
+                <strong class="highlight">${{ checkoutForm.get('monto')?.value }} USD</strong>
+              </div>
+              <div class="summary-row">
+                <span>Saldo después</span>
+                <strong [class.danger]="(session()?.saldo ?? 0) < checkoutForm.get('monto')?.value">
+                  ${{ ((session()?.saldo ?? 0) - checkoutForm.get('monto')?.value) | number:'1.2-2' }} USD
+                </strong>
+              </div>
+            </div>
+          }
+
+          <!-- Botones de Acción -->
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary proceed-btn" [disabled]="checkoutForm.invalid">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              Confirmar y Enviar Recarga
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="goHome()">← Cancelar</button>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- ESTADO: Procesando -->
+    @if (step() === 'processing') {
+      <div class="checkout-card card-glass text-center animate-fade-in">
+        <div class="processing-ring">
+          <div class="ring-spinner"></div>
+          <span>⚡</span>
+        </div>
+        <h2>Procesando Recarga...</h2>
+        <p>Estamos enviando la recarga a la operadora. Por favor espera.</p>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+      </div>
+    }
+
+    <!-- ESTADO: Éxito -->
+    @if (step() === 'success') {
+      <div class="checkout-card card-glass text-center animate-scale-up">
+        <div class="state-icon state-icon--success">✓</div>
+        <h2>¡Recarga Exitosa! 🎉</h2>
+        <div class="result-card">
+          <div class="result-row">
+            <span>Nro. Transacción</span>
+            <strong>#{{ resultData()?.nro_transaccion }}</strong>
+          </div>
+          <div class="result-row">
+            <span>Teléfono Recargado</span>
+            <strong>{{ checkoutForm.get('cuenta')?.value }}</strong>
+          </div>
+          <div class="result-row">
+            <span>Monto</span>
+            <strong class="highlight">${{ checkoutForm.get('monto')?.value }} USD</strong>
+          </div>
+          <div class="result-row">
+            <span>Saldo Actualizado</span>
+            <strong>${{ resultData()?.saldo }} USD</strong>
+          </div>
+        </div>
+        <div class="success-actions">
+          <button class="btn btn-primary proceed-btn" (click)="reset()">⚡ Hacer otra Recarga</button>
+          <button class="btn btn-secondary" (click)="goHome()">Ir al Inicio</button>
+        </div>
+      </div>
+    }
+
+    <!-- ESTADO: Error -->
+    @if (step() === 'error') {
+      <div class="checkout-card card-glass text-center animate-fade-in">
+        <div class="state-icon state-icon--error">✗</div>
+        <h2>Recarga Rechazada</h2>
+        <div class="error-box">{{ errorMessage() }}</div>
+        <div class="success-actions">
+          <button class="btn btn-primary" (click)="reset()">Intentar de Nuevo</button>
+          <button class="btn btn-secondary" (click)="goHome()">← Volver</button>
+        </div>
+      </div>
+    }
+
   </div>
 </div>

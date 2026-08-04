@@ -15,14 +15,33 @@
       <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Inicio</a></li>
       <li><a href="#formulario-recarga" (click)="scrollToRecargar($event)">Recargar</a></li>
       <li><a routerLink="/lineas-virtuales">Líneas Virtuales</a></li>
-      <li><a routerLink="/historial">Historial</a></li>
+      @if (isLoggedIn()) {
+        <li><a routerLink="/historial">Historial</a></li>
+      }
     </ul>
 
-    <!-- CTA Buttons -->
-    <div class="nav-cta">
-      <button (click)="openLoginModal()" class="btn btn-secondary btn-sm">Iniciar Sesión</button>
-      <button (click)="scrollToRecargar()" class="btn btn-primary btn-sm">Recargar Ahora</button>
-    </div>
+    <!-- CTA Buttons: No logueado -->
+    @if (!isLoggedIn()) {
+      <div class="nav-cta">
+        <button (click)="openLoginModal()" class="btn btn-secondary btn-sm">Iniciar Sesión</button>
+        <button (click)="scrollToRecargar()" class="btn btn-primary btn-sm">Recargar Ahora</button>
+      </div>
+    }
+
+    <!-- CTA Buttons: Logueado -->
+    @if (isLoggedIn()) {
+      <div class="nav-cta nav-user">
+        <div class="user-saldo">
+          <span>Saldo</span>
+          <strong>${{ session()?.saldo ?? 0 }}</strong>
+        </div>
+        <div class="user-chip">
+          <span class="user-avatar">{{ session()?.usuario?.charAt(0) ?? session()?.grupo?.charAt(0) ?? 'U' }}</span>
+          <span>{{ session()?.grupo }}</span>
+        </div>
+        <button (click)="logout()" class="btn btn-sm btn-logout">Salir</button>
+      </div>
+    }
 
     <!-- Mobile Hamburger -->
     <button class="mobile-toggle" (click)="toggleMobileMenu()" [attr.aria-expanded]="mobileMenuOpen()">
@@ -36,11 +55,17 @@
       <li><a routerLink="/" (click)="toggleMobileMenu()">Inicio</a></li>
       <li><a href="#formulario-recarga" (click)="scrollToRecargar($event)">Recargar</a></li>
       <li><a routerLink="/lineas-virtuales" (click)="toggleMobileMenu()">Líneas Virtuales</a></li>
-      <li><a routerLink="/historial" (click)="toggleMobileMenu()">Historial</a></li>
+      @if (isLoggedIn()) {
+        <li><a routerLink="/historial" (click)="toggleMobileMenu()">Historial</a></li>
+      }
     </ul>
     <div class="mobile-cta">
-      <button (click)="openLoginModal()" class="btn btn-secondary">Iniciar Sesión</button>
-      <button (click)="scrollToRecargar()" class="btn btn-primary">Recargar Ahora</button>
+      @if (!isLoggedIn()) {
+        <button (click)="openLoginModal()" class="btn btn-secondary">Iniciar Sesión</button>
+        <button (click)="scrollToRecargar()" class="btn btn-primary">Recargar Ahora</button>
+      } @else {
+        <button (click)="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+      }
     </div>
   </div>
 </nav>
