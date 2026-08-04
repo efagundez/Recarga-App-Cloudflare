@@ -1,6 +1,7 @@
-import { Component, signal, HostListener } from '@angular/core';
+import { Component, signal, HostListener, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthModalService } from '../../services/auth-modal.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,10 +11,11 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./navbar.scss']
 })
 export class NavbarComponent {
+  public authModal = inject(AuthModalService);
+  private router = inject(Router);
+
   isScrolled = signal(false);
   mobileMenuOpen = signal(false);
-
-  constructor(private router: Router) {}
 
   @HostListener('window:scroll', [])
   onScroll() {
@@ -22,6 +24,13 @@ export class NavbarComponent {
 
   toggleMobileMenu() {
     this.mobileMenuOpen.update(v => !v);
+  }
+
+  openLoginModal() {
+    if (this.mobileMenuOpen()) {
+      this.mobileMenuOpen.set(false);
+    }
+    this.authModal.open('login');
   }
 
   scrollToRecargar(event?: Event) {

@@ -1,0 +1,219 @@
+@if (modalService.isOpen()) {
+  <div class="auth-overlay animate-fade-in" (click)="modalService.close()">
+    
+    <div class="auth-dialog card-glass animate-scale-up" (click)="$event.stopPropagation()">
+      
+      <!-- Botón de Cierre -->
+      <button class="close-btn" (click)="modalService.close()" aria-label="Cerrar ventana">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Encabezado / Logo -->
+      <div class="modal-header">
+        <div class="brand-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+          </svg>
+          <span>RecargaVE Auth</span>
+        </div>
+
+        <!-- Pestañas Interactivas -->
+        <div class="mode-tabs">
+          <button 
+            type="button" 
+            class="mode-tab" 
+            [class.active]="modalService.activeTab() === 'login'"
+            (click)="modalService.activeTab.set('login')">
+            Iniciar Sesión
+          </button>
+          <button 
+            type="button" 
+            class="mode-tab" 
+            [class.active]="modalService.activeTab() === 'register'"
+            (click)="modalService.activeTab.set('register')">
+            Crear Cuenta
+          </button>
+        </div>
+      </div>
+
+      <!-- Alertas de Estado -->
+      @if (successMessage()) {
+        <div class="alert alert-success animate-fade-in">
+          <span>✓</span> {{ successMessage() }}
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="alert alert-error animate-fade-in">
+          <span>⚠️</span> {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- Formulario Login (ReactiveFormsModule) -->
+      @if (modalService.activeTab() === 'login') {
+        <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="modal-form">
+          
+          <!-- Campo Grupo -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="modal-grupo">Grupo de Sistema</label>
+              <div class="quick-groups">
+                <span (click)="setGrupo('RECARGA1')">RECARGA1</span>
+                <span (click)="setGrupo('DEMO')">DEMO</span>
+              </div>
+            </div>
+            <div class="input-wrapper" [class.is-invalid]="loginForm.get('grupo')?.invalid && loginForm.get('grupo')?.touched">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/>
+              </svg>
+              <input 
+                type="text" 
+                id="modal-grupo" 
+                formControlName="grupo"
+                class="input-field with-icon"
+                placeholder="RECARGA1"
+                [attr.disabled]="loading() ? true : null" />
+            </div>
+          </div>
+
+          <!-- Campo Usuario -->
+          <div class="form-group">
+            <label for="modal-usuario">Usuario</label>
+            <div class="input-wrapper" [class.is-invalid]="loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <input 
+                type="text" 
+                id="modal-usuario" 
+                formControlName="usuario"
+                class="input-field with-icon"
+                placeholder="Ej. ADMIN o TuUsuario"
+                [attr.disabled]="loading() ? true : null" />
+            </div>
+            @if (loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched) {
+              <span class="field-error">Ingresa tu usuario (mínimo 3 caracteres)</span>
+            }
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="modal-clave">Contraseña</label>
+              <a href="#" (click)="$event.preventDefault()" class="forgot-link">¿Clave olvidada?</a>
+            </div>
+            <div class="input-wrapper" [class.is-invalid]="loginForm.get('contrasenia')?.invalid && loginForm.get('contrasenia')?.touched">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <input 
+                [type]="showPassword() ? 'text' : 'password'" 
+                id="modal-clave" 
+                formControlName="contrasenia"
+                class="input-field with-icon"
+                placeholder="••••••••"
+                [attr.disabled]="loading() ? true : null" />
+              
+              <button type="button" class="toggle-eye" (click)="toggleShowPassword()">
+                @if (showPassword()) {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22"/>
+                  </svg>
+                } @else {
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                }
+              </button>
+            </div>
+            @if (loginForm.get('contrasenia')?.invalid && loginForm.get('contrasenia')?.touched) {
+              <span class="field-error">Ingresa tu contraseña (mínimo 4 caracteres)</span>
+            }
+          </div>
+
+          <!-- Botón Enviar con Spinner Integrado -->
+          <button type="submit" class="btn btn-primary submit-btn" [disabled]="loading()">
+            @if (loading()) {
+              <span class="btn-spinner"></span>
+              <span>Verificando JWT...</span>
+            } @else {
+              <span>Ingresar al Sistema</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            }
+          </button>
+        </form>
+
+        <!-- Botón Demo Acceso Directo -->
+        <div class="divider"><span>o acceso rápido de prueba</span></div>
+        <button type="button" class="demo-btn" (click)="quickDemoLogin()">
+          ⚡ Entrar como Demo (ADMIN / admin123)
+        </button>
+      }
+
+      <!-- Formulario Registro (ReactiveFormsModule) -->
+      @if (modalService.activeTab() === 'register') {
+        <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="modal-form">
+          <div class="form-group">
+            <label for="reg-nombre">Nombre Completo</label>
+            <div class="input-wrapper" [class.is-invalid]="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
+              <input 
+                type="text" 
+                id="reg-nombre" 
+                formControlName="nombre"
+                class="input-field"
+                placeholder="Juan Pérez"
+                [attr.disabled]="loading() ? true : null" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-usuario">Usuario</label>
+            <div class="input-wrapper" [class.is-invalid]="registerForm.get('usuario')?.invalid && registerForm.get('usuario')?.touched">
+              <input 
+                type="text" 
+                id="reg-usuario" 
+                formControlName="usuario"
+                class="input-field"
+                placeholder="tu_usuario"
+                [attr.disabled]="loading() ? true : null" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-clave">Contraseña</label>
+            <div class="input-wrapper" [class.is-invalid]="registerForm.get('contrasenia')?.invalid && registerForm.get('contrasenia')?.touched">
+              <input 
+                type="password" 
+                id="reg-clave" 
+                formControlName="contrasenia"
+                class="input-field"
+                placeholder="Mínimo 6 caracteres"
+                [attr.disabled]="loading() ? true : null" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary submit-btn" [disabled]="loading()">
+            @if (loading()) {
+              <span class="btn-spinner"></span>
+              <span>Creando Cuenta...</span>
+            } @else {
+              <span>Crear mi Cuenta Gratis</span>
+            }
+          </button>
+        </form>
+      }
+
+      <div class="modal-footer">
+        🔒 Conexión Cifrada SSL/TLS • RecargaVE 2026
+      </div>
+    </div>
+  </div>
+}

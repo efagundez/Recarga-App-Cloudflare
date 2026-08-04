@@ -20,7 +20,7 @@
 
     <!-- CTA Buttons -->
     <div class="nav-cta">
-      <a routerLink="/login" class="btn btn-secondary btn-sm">Iniciar Sesión</a>
+      <button (click)="openLoginModal()" class="btn btn-secondary btn-sm">Iniciar Sesión</button>
       <button (click)="scrollToRecargar()" class="btn btn-primary btn-sm">Recargar Ahora</button>
     </div>
 
@@ -39,7 +39,7 @@
       <li><a routerLink="/historial" (click)="toggleMobileMenu()">Historial</a></li>
     </ul>
     <div class="mobile-cta">
-      <a routerLink="/login" class="btn btn-secondary" (click)="toggleMobileMenu()">Iniciar Sesión</a>
+      <button (click)="openLoginModal()" class="btn btn-secondary">Iniciar Sesión</button>
       <button (click)="scrollToRecargar()" class="btn btn-primary">Recargar Ahora</button>
     </div>
   </div>
